@@ -40,7 +40,7 @@ const Chargment  = ({navigation}) => {
                 <Image source={require('../assets/les images/icons8-m-48.png')}
                 />
                 <AnimatedText 
-                    vitesse={500}
+                    vitesse={300}
                     text={"adaflex"}
                     style={style.text}
                 />    

@@ -4,9 +4,9 @@ import Insertion from '../composants/insertion'
 import Buttons from '../composants/button'
 import Colors from '../composants/color'
 import Animatedphrase from '../composants/animationphrase'
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
 const Inscription = ({navigation}) => {
-
+  const [loading,setloading] =React.useState(false);
   const [erreur,seterreur]=React.useState({
     email:'',
     phone:'',
@@ -42,10 +42,24 @@ const Inscription = ({navigation}) => {
       valid = false;
     }
     if(valid){
-      Alert.alert("Inscription reussie")
+      register()
     }
   }
   const register=()=>{
+  setloading(true);
+  setTimeout(() => {
+    setloading(false)
+
+    try{
+      AsyncStorage.setItem("user",JSON.stringify(input));
+      navigation.navigate('Login')
+    }catch(error){
+      Alert.alert('Error','something went wrong')
+
+    }
+    
+  }, 3000);
+
     
   }
 

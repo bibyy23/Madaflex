@@ -1,11 +1,13 @@
-import { View, Text, ScrollView, StyleSheet, Keyboard } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, Keyboard, Alert } from 'react-native'
 import React,{useState} from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Colors from '../composants/color'
 import Insertion from '../composants/insertion'
 import Buttons from '../composants/button'
 import Animatedphrase from '../composants/animationphrase'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 const Login = ({navigation}) => {
+  const [loading,setloading] = React.useState(false);
   const [erreur,seterreur]=useState({
       email:'',
       password:'',
@@ -30,9 +32,32 @@ const Login = ({navigation}) => {
       }
       
     }
+    //fonction pour confirmer si l utilisateur a deja un compte
     const login=()=>{
+     
+        setloading(true);
+        setTimeout(async () => {
+          setloading(false);
+          let userData = await AsyncStorage.getItem('user');
+          if(userData){
+            userData = JSON.parse(userData);
+            if(
+              input.email == userData.email &&
+              input.password == userData.password
+            ){
+              AsyncStorage.setItem("user",JSON.stringify({...userData,loggedIn:true})
+              );
+              navigation.navigate('navbar');
 
-    }
+            }else{
+              Alert.alert('Error','Invalid Details');
+            }
+          }else{
+            Alert.alert('error','User does not exist');
+          }
+        }, 3000);
+      }  
+
     {/*fonction pour mettre a jour l etat de chaque champ saisie*/}
     const handleOnchange=(text,input)=>{
       setinput((prevState)=>({...prevState,[input]:text}))
